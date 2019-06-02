@@ -8,6 +8,32 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-    
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox Grid.Row="0" Grid.Column="0" Width="Auto" FontSize="20" Margin="10" Padding="2"
+                 x:Name="UrlTextBox"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="10">
+            <Button  FontSize="20" Content="Load Songs"  Padding="2"
+                x:Name="LoadButton" />
+            <Button  FontSize="20" Content="Export as CSV" Margin="10,0,0,0"  Padding="2"
+                     x:Name="ExportButton" />
+        </StackPanel>
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ErrorTextBlock" Foreground="Red" FontSize="16" Margin="10,0"/>
+        <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" Margin="10" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock TextWrapping="WrapWithOverflow" FontSize="20" Text="{Binding Name}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </reactiveUi:ReactiveWindow>

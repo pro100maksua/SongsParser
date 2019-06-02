@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using SongsParser.Interfaces;
 using SongsParser.Services;
 using Splat;
@@ -19,6 +13,8 @@ namespace SongsParser
         public App()
         {
             Locator.CurrentMutable.RegisterConstant(new BillboardSongsParser(), typeof(ISongsParser));
+            Locator.CurrentMutable.RegisterConstant(new CSVService(), typeof(ICSVService));
+            Locator.CurrentMutable.RegisterConstant(new BrowserService(), typeof(IBrowserService));
         }
     }
 }

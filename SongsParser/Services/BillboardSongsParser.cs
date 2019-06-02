@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -11,26 +9,24 @@ namespace SongsParser.Services
 {
     public class BillboardSongsParser : ISongsParser
     {
-        private readonly HtmlWeb _web;
+        private readonly HtmlWeb _web = new HtmlWeb();
 
-        public BillboardSongsParser()
+        public async Task<IEnumerable<Song>> ParseSongsAsync(string url)
         {
-            _web = new HtmlWeb();
-        }
-
-        public IEnumerable<Song> ParseSongs(string url)
-        {
-            var document = _web.Load(url);
+            var document = await _web.LoadFromWebAsync(url, Encoding.UTF8).ConfigureAwait(false);
 
             var nodes = document.DocumentNode.SelectNodes(ByClassName("chart-list-item"));
-
             var songs = new List<Song>();
             foreach (var node in nodes)
             {
                 var artist = node.SelectSingleNode($".{ByClassName("chart-list-item__artist")}").InnerText;
                 var songName = node.SelectSingleNode($".{ByClassName("chart-list-item__title-text")}").InnerText;
 
-                songs.Add(new Song {Artist = artist, Name = songName});
+                songs.Add(new Song
+                {
+                    Artist = artist.Replace("\n",string.Empty), 
+                    Name = songName.Replace("\n", string.Empty) 
+                });
             }
 
             return songs;

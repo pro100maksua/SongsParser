@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SongsParser.Entities;
 
 namespace SongsParser.Interfaces
 {
     public interface ISongsParser
     {
-        IEnumerable<Song> ParseSongs(string url);
+        Task<IEnumerable<Song>> ParseSongsAsync(string url);
     }
 }
