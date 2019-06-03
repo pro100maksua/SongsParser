@@ -5,9 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:reactiveUi="http://reactiveui.net"
         xmlns:viewModels="clr-namespace:SongsParser.ViewModels"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Billboard Songs Parser" Height="600" Width="1000">
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -17,38 +22,38 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+
         <Grid Grid.Row="0" Grid.Column="0" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" Width="Auto" x:Name="CategoriesComboBox" >
+
+            <ComboBox Grid.Column="0" Width="Auto" x:Name="CategoriesComboBox" Margin="10,0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontSize="16"/>
+                        <TextBlock Text="{Binding}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <ComboBox Grid.Column="1" Width="Auto" x:Name="ChartsComboBox" Margin="10,0,0,0">
+            <ComboBox Grid.Column="1" Width="Auto" x:Name="ChartsComboBox" >
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}" FontSize="16"/>
+                        <TextBlock Text="{Binding Name}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </Grid>
+
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="10">
-            <Button  FontSize="16" Content="Load Songs"  Padding="2"
-                x:Name="LoadButton" />
-            <Button  FontSize="16" Content="Export as CSV" Margin="10,0,0,0"  Padding="2"
-                     x:Name="ExportButton" />
+            <Button Content="Load Songs"  Padding="2" x:Name="LoadButton"/>
+            <Button Content="Export as CSV" Margin="10,0,0,0" Padding="2" x:Name="ExportButton" />
         </StackPanel>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ErrorTextBlock" 
-                   Foreground="Red" FontSize="16" Margin="10,0"/>
-        <ListView  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" 
-                   FontSize="16" Margin="10" 
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                   Foreground="Red" Margin="10,0"/>
+
+        <ListView  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" Margin="10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
@@ -57,5 +62,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
     </Grid>
 </reactiveUi:ReactiveWindow>
