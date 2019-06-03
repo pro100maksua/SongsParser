@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -26,8 +27,8 @@ namespace SongsParser.Services
 
                 songs.Add(new Song
                 {
-                    Artist = artist.Trim(),
-                    Name = songName.Trim()
+                    Artist = Format(artist),
+                    Name = Format(songName)
                 });
             }
 
@@ -43,7 +44,7 @@ namespace SongsParser.Services
 
             var nodes = categoriesNode.SelectNodes("." + ByClassName("chart-panel__text"));
 
-            var categories = nodes.Select(n => n.InnerText.Trim());
+            var categories = nodes.Select(n => Format(n.InnerText));
             return categories;
         }
 
@@ -64,17 +65,28 @@ namespace SongsParser.Services
 
                 charts.Add(new Chart
                 {
-                    Name = name.Trim(),
-                    Link = link?.Trim()
+                    Name = Format(name),
+                    Link = Format(link)
                 });
             }
 
             return charts;
         }
 
+        private string Format(string str)
+        {
+            return WebUtility.HtmlDecode(str?.Trim());
+        }
+
         private string GetIdForCategory(string category)
         {
-            return category.ToLower().Replace(" ", string.Empty).Replace("/", string.Empty) + "ChartPanel";
+            var sb = new StringBuilder(category.ToLower());
+            sb.Replace(" ", string.Empty);
+            sb.Replace("/", string.Empty);
+            sb.Replace("&", string.Empty);
+            sb.Append("ChartPanel");
+
+            return sb.ToString();
         }
 
         private string ByClassName(string className)
