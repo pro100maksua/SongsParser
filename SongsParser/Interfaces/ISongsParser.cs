@@ -6,6 +6,8 @@ namespace SongsParser.Interfaces
 {
     public interface ISongsParser
     {
-        Task<IEnumerable<Song>> ParseSongsAsync(string url);
+        Task<IEnumerable<Song>> ParseSongsAsync(string link);
+        Task<IEnumerable<string>> ParseCategoriesAsync();
+        Task<IEnumerable<Chart>> ParseChartsAsync(string category);
     }
 }

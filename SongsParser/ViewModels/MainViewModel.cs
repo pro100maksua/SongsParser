@@ -18,12 +18,16 @@ namespace SongsParser.ViewModels
         private readonly ICSVService _csvService;
         private readonly ISongsParser _songsParser;
 
-        [Reactive] public string Url { get; set; }
         [Reactive] public IEnumerable<Song> Songs { get; set; }
         [Reactive] public string Error { get; set; }
+        [Reactive] public string SelectedCategory { get; set; }
+        [Reactive] public Chart SelectedChart { get; set; }
+        [Reactive] public IEnumerable<string> Categories { get; set; }
+        [Reactive] public IEnumerable<Chart> Charts { get; set; }
 
         public ReactiveCommand<Unit, Unit> LoadSongsCommand { get; }
         public ReactiveCommand<Unit, Unit> ExportSongsCommand { get; }
+        public ReactiveCommand<EventArgs, Unit> LoadCategories { get; }
 
         public MainViewModel(ISongsParser songsParser = default, ICSVService csvService = default, IBrowserService browserService = default)
         {
@@ -32,23 +36,39 @@ namespace SongsParser.ViewModels
             _browserService = browserService ?? Locator.Current.GetService<IBrowserService>();
 
             Songs = Enumerable.Empty<Song>();
+            Charts = Enumerable.Empty<Chart>();
+            Categories = Enumerable.Empty<string>();
 
             LoadSongsCommand = ReactiveCommand.CreateFromTask(LoadSongsAsync,
-                this.WhenAnyValue(vm => vm.Url, url => !string.IsNullOrWhiteSpace(url)));
+                this.WhenAnyValue(vm => vm.SelectedChart, selector: c => c != null));
             ExportSongsCommand = ReactiveCommand.Create(ExportSongs,
                 this.WhenAnyValue(vm => vm.Songs, s => s.Count() != 0));
+            LoadCategories = ReactiveCommand.CreateFromTask<EventArgs>(_ => LoadCategoriesAsync());
 
             LoadSongsCommand.ThrownExceptions.Subscribe((ex) => Error = ex.Message);
             ExportSongsCommand.ThrownExceptions.Subscribe((ex) => Error = ex.Message);
+            LoadCategories.ThrownExceptions.Subscribe((ex) => Error = ex.Message);
 
-            this.WhenAnyValue(vm => vm.Url)
+            this.WhenAnyValue(vm => vm.SelectedCategory)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .SelectMany(LoadChartsAsync)
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(_ => Error = string.Empty);
+                .Subscribe(c => Charts = c);
+        }
+
+        private async Task LoadCategoriesAsync()
+        {
+            Categories = await _songsParser.ParseCategoriesAsync();
+        }
+
+        private async Task<IEnumerable<Chart>> LoadChartsAsync(string category)
+        {
+            return await _songsParser.ParseChartsAsync(category);
         }
 
         private async Task LoadSongsAsync()
         {
-            Songs = await _songsParser.ParseSongsAsync(Url);
+            Songs = await _songsParser.ParseSongsAsync(SelectedChart.Link);
         }
 
         private void ExportSongs()

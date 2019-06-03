@@ -17,17 +17,37 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-
-        <TextBox Grid.Row="0" Grid.Column="0" FontSize="16" Margin="10" Padding="2"
-                 x:Name="UrlTextBox"/>
+        <Grid Grid.Row="0" Grid.Column="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" Width="Auto" x:Name="CategoriesComboBox" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="16"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox Grid.Column="1" Width="Auto" x:Name="ChartsComboBox" Margin="10,0,0,0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="16"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="10">
             <Button  FontSize="16" Content="Load Songs"  Padding="2"
                 x:Name="LoadButton" />
             <Button  FontSize="16" Content="Export as CSV" Margin="10,0,0,0"  Padding="2"
                      x:Name="ExportButton" />
         </StackPanel>
-        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ErrorTextBlock" Foreground="Red" FontSize="16" Margin="10,0"/>
-        <ListView FontSize="16" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" Margin="10" 
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ErrorTextBlock" 
+                   Foreground="Red" FontSize="16" Margin="10,0"/>
+        <ListView  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" 
+                   FontSize="16" Margin="10" 
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.View>
                 <GridView>
