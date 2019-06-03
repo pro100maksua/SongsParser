@@ -5,6 +5,6 @@ namespace SongsParser.Interfaces
 {
     public interface ICSVService
     {
-        void Write(IEnumerable<Song> songs, string filePath);
+        void WriteToFile(IEnumerable<Song> songs, string filePath);
     }
 }

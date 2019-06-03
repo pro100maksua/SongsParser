@@ -8,6 +8,6 @@ namespace SongsParser.Entities
 
         public string Name { get; set; }
 
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
     }
 }

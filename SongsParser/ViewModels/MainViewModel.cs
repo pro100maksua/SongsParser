@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -58,7 +57,7 @@ namespace SongsParser.ViewModels
             {
                 var fileName = _browserService.BrowseFile();
 
-                _csvService.Write(Songs, fileName);
+                _csvService.WriteToFile(Songs, fileName);
             }
             catch (ArgumentException ex)
             {

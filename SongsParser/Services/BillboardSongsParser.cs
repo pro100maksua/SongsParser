@@ -19,13 +19,13 @@ namespace SongsParser.Services
             var songs = new List<Song>();
             foreach (var node in nodes)
             {
-                var artist = node.SelectSingleNode($".{ByClassName("chart-list-item__artist")}").InnerText;
-                var songName = node.SelectSingleNode($".{ByClassName("chart-list-item__title-text")}").InnerText;
+                var artist = node.SelectSingleNode("." + ByClassName("chart-list-item__artist")).InnerText;
+                var songName = node.SelectSingleNode("." + ByClassName("chart-list-item__title-text")).InnerText;
 
                 songs.Add(new Song
                 {
-                    Artist = artist.Replace("\n",string.Empty), 
-                    Name = songName.Replace("\n", string.Empty) 
+                    Artist = artist.Trim(),
+                    Name = songName.Trim()
                 });
             }
 

@@ -108,6 +108,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Entities\Song.cs" />
+    <Compile Include="Maps\SongMap.cs" />
     <Compile Include="Services\BillboardSongsParser.cs" />
     <Compile Include="Interfaces\ISongsParser.cs" />
     <Compile Include="Interfaces\ICSVService.cs" />
