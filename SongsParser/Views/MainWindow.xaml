@@ -18,22 +18,24 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Row="0" Grid.Column="0" Width="Auto" FontSize="20" Margin="10" Padding="2"
+        <TextBox Grid.Row="0" Grid.Column="0" FontSize="16" Margin="10" Padding="2"
                  x:Name="UrlTextBox"/>
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="10">
-            <Button  FontSize="20" Content="Load Songs"  Padding="2"
+            <Button  FontSize="16" Content="Load Songs"  Padding="2"
                 x:Name="LoadButton" />
-            <Button  FontSize="20" Content="Export as CSV" Margin="10,0,0,0"  Padding="2"
+            <Button  FontSize="16" Content="Export as CSV" Margin="10,0,0,0"  Padding="2"
                      x:Name="ExportButton" />
         </StackPanel>
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="ErrorTextBlock" Foreground="Red" FontSize="16" Margin="10,0"/>
-        <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" Margin="10" 
+        <ListView FontSize="16" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" Margin="10" 
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock TextWrapping="WrapWithOverflow" FontSize="20" Text="{Binding Name}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Artist" Width="Auto"  DisplayMemberBinding="{Binding Artist}"/>
+                    <GridViewColumn Header="Duration" Width="Auto"   DisplayMemberBinding="{Binding Duration}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </reactiveUi:ReactiveWindow>
