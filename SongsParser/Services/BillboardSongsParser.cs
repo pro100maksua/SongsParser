@@ -22,13 +22,21 @@ namespace SongsParser.Services
             var songs = new List<Song>();
             foreach (var node in songsNode)
             {
-                var artist = node.SelectSingleNode("." + ByClassName("chart-list-item__artist")).InnerText;
-                var songName = node.SelectSingleNode("." + ByClassName("chart-list-item__title-text")).InnerText;
+                var artist = node.SelectSingleNode("." + ByClassName("chart-list-item__artist"))?.InnerText;
+                var songName = node.SelectSingleNode("." + ByClassName("chart-list-item__title-text"))?.InnerText;
+                var avatarNode = node.SelectSingleNode("." + ByClassName("chart-list-item__image"));
+                var lastWeek = node.SelectSingleNode("." + ByClassName("chart-list-item__last-week"))?.InnerText;
+                var peakPosition = node.SelectSingleNode("." + ByClassName("chart-list-item__weeks-at-one"))?.InnerText;
+                var weeksOnChart = node.SelectSingleNode("." + ByClassName("chart-list-item__weeks-on-chart"))?.InnerText;
 
                 songs.Add(new Song
                 {
                     Artist = Format(artist),
-                    Name = Format(songName)
+                    Name = Format(songName),
+                    Avatar = Format(GetAttribute(avatarNode, "data-src")),
+                    LastWeek = Format(lastWeek),
+                    PeakPosition = Format(peakPosition),
+                    WeeksOnChart = Format(weeksOnChart)
                 });
             }
 
@@ -60,7 +68,7 @@ namespace SongsParser.Services
             var charts = new List<Chart>();
             foreach (var node in nodes)
             {
-                var link = node.Attributes.FirstOrDefault(a => a.Name == "href")?.Value;
+                var link = GetAttribute(node, "href");
                 var name = node.SelectSingleNode("." + ByClassName("chart-panel__text")).InnerText;
 
                 charts.Add(new Chart
@@ -87,6 +95,11 @@ namespace SongsParser.Services
             sb.Append("ChartPanel");
 
             return sb.ToString();
+        }
+
+        private string GetAttribute(HtmlNode node, string name)
+        {
+            return node.Attributes.FirstOrDefault(a => a.Name == name)?.Value;
         }
 
         private string ByClassName(string className)

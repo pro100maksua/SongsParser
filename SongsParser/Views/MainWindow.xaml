@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:reactiveUi="http://reactiveui.net"
         xmlns:viewModels="clr-namespace:SongsParser.ViewModels"
+        xmlns:songsParser="clr-namespace:SongsParser"
+        xmlns:converters="clr-namespace:SongsParser.Converters"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
         TextElement.FontWeight="Medium"
@@ -12,6 +14,9 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         mc:Ignorable="d"
         Title="Billboard Songs Parser" Height="600" Width="1000">
+    <Window.Resources>
+        <converters:ImageConveter x:Key="ImageConverter" />
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -56,9 +61,18 @@
         <ListView  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SongsListBox" Margin="10">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Header="Avatar">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Avatar, Converter={StaticResource ImageConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Artist" Width="Auto"  DisplayMemberBinding="{Binding Artist}"/>
-                    <GridViewColumn Header="Duration" Width="Auto"   DisplayMemberBinding="{Binding Duration}"/>
+                    <GridViewColumn Header="Last Week" Width="Auto"  DisplayMemberBinding="{Binding LastWeek}"/>
+                    <GridViewColumn Header="Peak Position" Width="Auto"  DisplayMemberBinding="{Binding PeakPosition}"/>
+                    <GridViewColumn Header="Weeks on Chart" Width="Auto"  DisplayMemberBinding="{Binding WeeksOnChart}"/>
                 </GridView>
             </ListView.View>
         </ListView>

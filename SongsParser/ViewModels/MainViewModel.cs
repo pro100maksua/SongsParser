@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 using SongsParser.Entities;
 using SongsParser.Interfaces;
 using Splat;
@@ -17,19 +16,49 @@ namespace SongsParser.ViewModels
         private readonly IBrowserService _browserService;
         private readonly ICSVService _csvService;
         private readonly ISongsParser _songsParser;
+        private IEnumerable<Song> _songs;
+        private string _error;
+        private string _selectedCategory;
+        private Chart _selectedChart;
+        private IEnumerable<string> _categories;
+        private IEnumerable<Chart> _charts;
 
-        [Reactive] public IEnumerable<Song> Songs { get; set; }
-        [Reactive] public string Error { get; set; }
-        [Reactive] public string SelectedCategory { get; set; }
-        [Reactive] public Chart SelectedChart { get; set; }
-        [Reactive] public IEnumerable<string> Categories { get; set; }
-        [Reactive] public IEnumerable<Chart> Charts { get; set; }
+        public IEnumerable<Song> Songs
+        {
+            get => _songs;
+            set => this.RaiseAndSetIfChanged(ref _songs, value);
+        } 
+        public string Error
+        {
+            get => _error;
+            set => this.RaiseAndSetIfChanged(ref _error, value);
+        }
+        public string SelectedCategory
+        {
+            get => _selectedCategory;
+            set => this.RaiseAndSetIfChanged(ref _selectedCategory, value);
+        }
+        public Chart SelectedChart
+        {
+            get => _selectedChart;
+            set => this.RaiseAndSetIfChanged(ref _selectedChart, value);
+        }
+        public IEnumerable<string> Categories
+        {
+            get => _categories;
+            set => this.RaiseAndSetIfChanged(ref _categories, value);
+        }
+        public IEnumerable<Chart> Charts
+        {
+            get => _charts;
+            set => this.RaiseAndSetIfChanged(ref _charts, value);
+        }
 
         public ReactiveCommand<Unit, Unit> LoadSongsCommand { get; }
         public ReactiveCommand<Unit, Unit> ExportSongsCommand { get; }
         public ReactiveCommand<EventArgs, Unit> LoadCategories { get; }
 
-        public MainViewModel(ISongsParser songsParser = default, ICSVService csvService = default, IBrowserService browserService = default)
+        public MainViewModel(ISongsParser songsParser = null, ICSVService csvService = null, IBrowserService browserService = null)
         {
             _songsParser = songsParser ?? Locator.Current.GetService<ISongsParser>();
             _csvService = csvService ?? Locator.Current.GetService<ICSVService>();

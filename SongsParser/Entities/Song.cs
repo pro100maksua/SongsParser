@@ -8,6 +8,12 @@ namespace SongsParser.Entities
 
         public string Name { get; set; }
 
-        public TimeSpan? Duration { get; set; }
+        public string Avatar { get; set; }
+
+        public string LastWeek { get; set; }
+
+        public string PeakPosition { get; set; }
+
+        public string WeeksOnChart { get; set; }
     }
 }

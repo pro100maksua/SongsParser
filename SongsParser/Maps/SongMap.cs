@@ -8,7 +8,6 @@ namespace SongsParser.Maps
         public SongMap()
         {
             AutoMap();
-            Map(s => s.Duration).Optional();
         }
     }
 }
