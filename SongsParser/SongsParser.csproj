@@ -126,7 +126,6 @@
     <Compile Include="Services\BrowserService.cs" />
     <Compile Include="Services\CSVService.cs" />
     <Compile Include="Interfaces\IBrowserService.cs" />
-    <Compile Include="Services\SpotifySongsParser.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

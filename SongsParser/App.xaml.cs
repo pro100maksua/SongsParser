@@ -12,7 +12,7 @@ namespace SongsParser
     {
         public App()
         {
-            Locator.CurrentMutable.RegisterConstant(new SpotifySongsParser(), typeof(ISongsParser));
+            Locator.CurrentMutable.RegisterConstant(new BillboardSongsParser(), typeof(ISongsParser));
             Locator.CurrentMutable.RegisterConstant(new CSVService(), typeof(ICSVService));
             Locator.CurrentMutable.RegisterConstant(new BrowserService(), typeof(IBrowserService));
         }
