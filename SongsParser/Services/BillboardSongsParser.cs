@@ -28,13 +28,13 @@ namespace SongsParser.Services
         {
             var document = await _web.LoadFromWebAsync(BaseUrl + link, Encoding.UTF8).ConfigureAwait(false);
 
-            var songsNode = document.DocumentNode.SelectNodes(ByClassName("chart-list-item"));
+            var songNodes = document.DocumentNode.SelectNodes(ByClassName("o-chart-results-list-row"));
             var songs = new List<Song>();
-            foreach (var node in songsNode)
+            foreach (var node in songNodes)
             {
-                var artist = node.SelectSingleNode("." + ByClassName("chart-list-item__artist"))?.InnerText;
-                var songName = node.SelectSingleNode("." + ByClassName("chart-list-item__title-text"))?.InnerText;
-                var avatarNode = node.SelectSingleNode("." + ByClassName("chart-list-item__image"));
+                var artist = node.SelectSingleNode("." + ByClassName("c-label"))?.InnerText;
+                var songName = node.SelectSingleNode("." + ByClassName("c-title"))?.InnerText;
+                var avatarNode = node.SelectSingleNode("." + ByClassName("c-lazy-image__img"));
                 var lastWeek = node.SelectSingleNode("." + ByClassName("chart-list-item__last-week"))?.InnerText;
                 var peakPosition = node.SelectSingleNode("." + ByClassName("chart-list-item__weeks-at-one"))?.InnerText;
                 var weeksOnChart = node.SelectSingleNode("." + ByClassName("chart-list-item__weeks-on-chart"))?.InnerText;
@@ -43,10 +43,10 @@ namespace SongsParser.Services
                 {
                     Artist = Format(artist),
                     Name = Format(songName),
-                    Avatar = Format(GetAttribute(avatarNode, "data-src")),
+                    Avatar = Format(GetAttribute(avatarNode, "src")),
                     LastWeek = Format(lastWeek),
                     PeakPosition = Format(peakPosition),
-                    WeeksOnChart = Format(weeksOnChart)
+                    WeeksOnChart = Format(weeksOnChart),
                 });
             }
 
