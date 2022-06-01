@@ -4,6 +4,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using RestEase;
+using SongsParser.ApiInterfaces;
 using SongsParser.Entities;
 using SongsParser.Interfaces;
 
@@ -12,11 +14,19 @@ namespace SongsParser.Services
     public class BillboardSongsParser : ISongsParser
     {
         private readonly HtmlWeb _web = new HtmlWeb();
-        private readonly string _baseUrl = "https://www.billboard.com/";
+        private readonly IBillboardChartsApi _billboardChartsApi;
+
+        private const string BaseUrl = "https://www.billboard.com/";
+
+
+        public BillboardSongsParser()
+        {
+            _billboardChartsApi = RestClient.For<IBillboardChartsApi>(BaseUrl);
+        }
 
         public async Task<IEnumerable<Song>> ParseSongsAsync(string link)
         {
-            var document = await _web.LoadFromWebAsync(_baseUrl + link, Encoding.UTF8).ConfigureAwait(false);
+            var document = await _web.LoadFromWebAsync(BaseUrl + link, Encoding.UTF8).ConfigureAwait(false);
 
             var songsNode = document.DocumentNode.SelectNodes(ByClassName("chart-list-item"));
             var songs = new List<Song>();
@@ -45,36 +55,36 @@ namespace SongsParser.Services
 
         public async Task<IEnumerable<string>> ParseCategoriesAsync()
         {
-            var url = _baseUrl + "/charts";
+            var url = BaseUrl + "/charts";
             var document = await _web.LoadFromWebAsync(url).ConfigureAwait(false);
 
-            var categoriesNode = document.DocumentNode.SelectSingleNode(ByClassName("chart-panel--main"));
+            var xpath = $"{ByClassName("all-charts-list")}{ByClassName("o-nav__list")}{ByClassName("c-link")}";
+            var nodes = document.DocumentNode.SelectNodes(xpath);
 
-            var nodes = categoriesNode.SelectNodes("." + ByClassName("chart-panel__text"));
-
-            var categories = nodes.Select(n => Format(n.InnerText));
+            var categories = nodes.Select(n => Format(n.InnerText)).ToList();
             return categories;
         }
 
         public async Task<IEnumerable<Chart>> ParseChartsAsync(string category)
         {
-            var url = _baseUrl + "/charts";
-            var document = await _web.LoadFromWebAsync(url).ConfigureAwait(false);
+            var result = await _billboardChartsApi.GetChartsHtmlAsync(category).ConfigureAwait(false);
 
-            var id = GetIdForCategory(category);
-            var chartsNode = document.DocumentNode.SelectSingleNode(ById(id));
+            var document = new HtmlDocument();
+            document.LoadHtml(result.Html);
 
-            var nodes = chartsNode.SelectNodes("." + ByClassName("chart-panel__link"));
+            var xpath = $"{ByClassName("o-chart-list-card")}/a";
+            var nodes = document.DocumentNode.SelectNodes(xpath);
+
             var charts = new List<Chart>();
             foreach (var node in nodes)
             {
                 var link = GetAttribute(node, "href");
-                var name = node.SelectSingleNode("." + ByClassName("chart-panel__text")).InnerText;
+                var name = node.SelectSingleNode($".{ByClassName("c-span")}").InnerText;
 
                 charts.Add(new Chart
                 {
                     Name = Format(name),
-                    Link = Format(link)
+                    Link = link,
                 });
             }
 
@@ -86,17 +96,6 @@ namespace SongsParser.Services
             return WebUtility.HtmlDecode(str?.Trim());
         }
 
-        private string GetIdForCategory(string category)
-        {
-            var sb = new StringBuilder(category.ToLower());
-            sb.Replace(" ", string.Empty);
-            sb.Replace("/", string.Empty);
-            sb.Replace("&", string.Empty);
-            sb.Append("ChartPanel");
-
-            return sb.ToString();
-        }
-
         private string GetAttribute(HtmlNode node, string name)
         {
             return node.Attributes.FirstOrDefault(a => a.Name == name)?.Value;
@@ -105,11 +104,6 @@ namespace SongsParser.Services
         private string ByClassName(string className)
         {
             return $"//*[contains(concat(' ', @class, ' '), ' {className} ')]";
-        }
-
-        private string ById(string id)
-        {
-            return $"//*[contains(@id, '{id}')]";
         }
     }
 }
