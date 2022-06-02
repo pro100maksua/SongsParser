@@ -32,18 +32,18 @@ namespace SongsParser.Services
             var songs = new List<Song>();
             foreach (var node in songNodes)
             {
-                var artist = node.SelectSingleNode("." + ByClassName("c-label"))?.InnerText;
-                var songName = node.SelectSingleNode("." + ByClassName("c-title"))?.InnerText;
-                var avatarNode = node.SelectSingleNode("." + ByClassName("c-lazy-image__img"));
-                var lastWeek = node.SelectSingleNode("." + ByClassName("chart-list-item__last-week"))?.InnerText;
-                var peakPosition = node.SelectSingleNode("." + ByClassName("chart-list-item__weeks-at-one"))?.InnerText;
-                var weeksOnChart = node.SelectSingleNode("." + ByClassName("chart-list-item__weeks-on-chart"))?.InnerText;
+                var artist = node.SelectSingleNode($".{ById("title-of-a-story")}/following-sibling::span")?.InnerText;
+                var songName = node.SelectSingleNode($".{ById("title-of-a-story")}")?.InnerText;
+                var avatar = node.SelectSingleNode($".{ByClassName("c-lazy-image__img")}").GetAttributeValue("data-lazy-src", string.Empty);
+                var lastWeek = node.SelectSingleNode($"(.{ByClassName("o-chart-results-list__item")})[7]")?.InnerText;
+                var peakPosition = node.SelectSingleNode($"(.{ByClassName("o-chart-results-list__item")})[8]")?.InnerText;
+                var weeksOnChart = node.SelectSingleNode($"(.{ByClassName("o-chart-results-list__item")})[9]")?.InnerText;
 
                 songs.Add(new Song
                 {
                     Artist = Format(artist),
                     Name = Format(songName),
-                    Avatar = Format(GetAttribute(avatarNode, "src")),
+                    Avatar = avatar,
                     LastWeek = Format(lastWeek),
                     PeakPosition = Format(peakPosition),
                     WeeksOnChart = Format(weeksOnChart),
@@ -104,6 +104,11 @@ namespace SongsParser.Services
         private string ByClassName(string className)
         {
             return $"//*[contains(concat(' ', @class, ' '), ' {className} ')]";
+        }
+
+        private string ById(string id)
+        {
+            return $"//*[contains(@id, '{id}')]";
         }
     }
 }
